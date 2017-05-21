@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import tornado.web
 
-import handler.ActionHandler
-import handler.HtmlHandler
-import handler.WebsocketHandler
-import uimodules.WebGui.ServerInfo
+from . import handler.ActionHandler
+from . import handler.HtmlHandler
+from . import handler.WebsocketHandler
+from . import uimodules.WebGui.ServerInfo
 from lumbermill.BaseModule import BaseModule
 from lumbermill.utils.Decorators import ModuleDocstringParser
 

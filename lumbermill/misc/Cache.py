@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import cPickle
+import pickle
 import sys
 import redis
 
@@ -128,7 +128,7 @@ class Cache(BaseThreadedModule):
         # Some modules like Facet depend on this.
         cluster = {'nodes': {}, 'master_of': {}}
         counter = 1
-        for master_node, slave_nodes in self.getConfigurationValue('cluster').items():
+        for master_node, slave_nodes in list(self.getConfigurationValue('cluster').items()):
             master_node_key = "node_%d" % counter
             node_name_or_ip, node_port = self._parseRedisServerAddress(master_node)
             cluster['nodes'].update({master_node_key: {'host': node_name_or_ip, 'port': node_port}})
@@ -179,7 +179,7 @@ class Cache(BaseThreadedModule):
     def set(self, key, value, ttl=0, pickle=True):
         if pickle is True:
             try:
-                value = cPickle.dumps(value)
+                value = pickle.dumps(value)
             except:
                 etype, evalue, etb = sys.exc_info()
                 self.logger.error("Could not store %s:%s in redis. Exception: %s, Error: %s." % (key, value, etype, evalue))
@@ -202,7 +202,7 @@ class Cache(BaseThreadedModule):
         for value in values:
             if value['pickle'] is True:
                 try:
-                    value['value'] = cPickle.dumps(value['value'])
+                    value['value'] = pickle.dumps(value['value'])
                 except:
                     etype, evalue, etb = sys.exc_info()
                     self.logger.error("Could not store %s:%s in redis. Exception: %s, Error: %s." % (value['key'], value['value'], etype, evalue))
@@ -222,7 +222,7 @@ class Cache(BaseThreadedModule):
         value = self.kv_store.get(key)
         if unpickle and value:
             try:
-                value = cPickle.loads(value)
+                value = pickle.loads(value)
             except:
                 etype, evalue, etb = sys.exc_info()
                 self.logger.error("Could not unpickle %s:%s from redis. Exception: %s, Error: %s." % (key, value, etype, evalue))

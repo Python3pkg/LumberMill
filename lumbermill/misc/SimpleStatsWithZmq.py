@@ -48,7 +48,7 @@ class SimpleStats(BaseThreadedModule):
         return runTimedFunctionsFunc
 
     def accumulateEventTypeStats(self):
-        for event_type, count in self.stats_collector.getAllCounters().items():
+        for event_type, count in list(self.stats_collector.getAllCounters().items()):
             MultiProcessStatisticCollector().incrementCounter(event_type, count)
             self.stats_collector.resetCounter(event_type)
 
@@ -98,7 +98,7 @@ class SimpleStats(BaseThreadedModule):
 
     def initAfterFork(self):
         # Get all configured queues for waiting event stats.
-        for module_name, module_info in self.lumbermill.modules.items():
+        for module_name, module_info in list(self.lumbermill.modules.items()):
             instance = module_info['instances'][0]
             if not hasattr(instance, 'getInputQueue') or not instance.getInputQueue():
                 continue

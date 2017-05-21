@@ -117,7 +117,7 @@ class PackConfiguration(BaseModule.BaseModule):
         filtered_configuration = []
         for idx, module_info in enumerate(configuration):
             if type(module_info) is dict:
-                module_name = module_info.keys()[0]
+                module_name = list(module_info.keys())[0]
             elif type(module_info) is str:
                 module_name = module_info
             else:

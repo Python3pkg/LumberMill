@@ -79,7 +79,7 @@ class WebserverTornado(BaseThreadedModule):
         try:
             self.server = tornado.httpserver.HTTPServer(self.application, ssl_options=ssl_options)
             self.server.listen(self.getConfigurationValue('port'))
-            for fd, server_socket in self.server._sockets.items():
+            for fd, server_socket in list(self.server._sockets.items()):
                 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         except:
             etype, evalue, etb = sys.exc_info()

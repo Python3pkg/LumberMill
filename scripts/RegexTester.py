@@ -18,9 +18,9 @@ try:
     regex_comp = re.compile(options.regex)
     matches = regex_comp.search(test_string)
     if not matches:
-        print "Regex does not match."
+        print("Regex does not match.")
         sys.exit(255)
-    print "Regex matches:"
-    print "%s" % matches.groupdict()
-except Exception, e:
-    print "Could not test regex. Exception: %s, Error: %s" % (Exception ,e)
+    print("Regex matches:")
+    print("%s" % matches.groupdict())
+except Exception as e:
+    print("Could not test regex. Exception: %s, Error: %s" % (Exception ,e))

@@ -18,7 +18,7 @@ def compileRegExPattern(pattern):
         regex = re.compile(include_test_filename_pattern)
     except:
         etype, evalue, etb = sys.exc_info()
-        print("RegEx error for pattern %s. Exception: %s, Error: %s." % (include_test_filename_pattern, etype, evalue))
+        print(("RegEx error for pattern %s. Exception: %s, Error: %s." % (include_test_filename_pattern, etype, evalue)))
         exit()
     return regex
 

@@ -49,7 +49,7 @@ class NmapScanner(BaseModule):
                 etype, evalue, etb = sys.exc_info()
                 self.logger.warning("Scanning failed. Exception: %s, Error: %s." % (etype, evalue))
                 return
-            for host, scan_result in scan_results['scan'].items():
+            for host, scan_result in list(scan_results['scan'].items()):
                 try:
                     host_scan_result = self.scanner.scan('%s/32' % (host), arguments=self.arguments)
                 except nmap.PortScannerError:
@@ -67,7 +67,7 @@ class NmapScanner(BaseModule):
             scan_result['detected_os'] = os_info[0]['name']
             scan_result.pop('osmatch')
         if 'vendor' in scan_result and isinstance(scan_result['vendor'], dict) and len(scan_result['vendor']) > 0:
-            scan_result['vendor'] = scan_result['vendor'].values()[0]
+            scan_result['vendor'] = list(scan_result['vendor'].values())[0]
         # Drop some fields.
         if 'osclass' in scan_result:
             scan_result.pop('osclass')

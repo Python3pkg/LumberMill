@@ -21,16 +21,16 @@ import yaml
 #    print('Usage: %s -m %s -c <path/to/config.conf>' % (sys.executable, os.path.splitext(sys.argv[0])[0]))
 #    sys.exit()
 
-from lumbermill.constants import MSGPACK_AVAILABLE, ZMQ_AVAILABLE, LOGLEVEL_STRING_TO_LOGLEVEL_INT
-from lumbermill.utils.misc import TimedFunctionManager, coloredConsoleLogging, restartMainProcess
-from lumbermill.utils.Buffers import BufferedQueue, ZeroMqMpQueue
-from lumbermill.utils.DictUtils import mergeNestedDicts
-from lumbermill.utils.ConfigurationValidator import ConfigurationValidator
-from lumbermill.utils.MultiProcessDataStore import MultiProcessDataStore
+from .lumbermill.constants import MSGPACK_AVAILABLE, ZMQ_AVAILABLE, LOGLEVEL_STRING_TO_LOGLEVEL_INT
+from .lumbermill.utils.misc import TimedFunctionManager, coloredConsoleLogging, restartMainProcess
+from .lumbermill.utils.Buffers import BufferedQueue, ZeroMqMpQueue
+from .lumbermill.utils.DictUtils import mergeNestedDicts
+from .lumbermill.utils.ConfigurationValidator import ConfigurationValidator
+from .lumbermill.utils.MultiProcessDataStore import MultiProcessDataStore
 
 # Conditional imports for python2/3
 try:
-    import Queue
+    import queue
 except ImportError:
     import queue as Queue
 
@@ -84,7 +84,7 @@ class LumberMill():
         """Returns a queue with queue_max_size"""
         queue = None
         if queue_type == 'simple':
-            queue =  BufferedQueue(queue=Queue.Queue(queue_max_size), buffersize=queue_buffer_size)
+            queue =  BufferedQueue(queue=queue.Queue(queue_max_size), buffersize=queue_buffer_size)
         if queue_type == 'multiprocess':
             # At the moment I ran into a problem with zmq.
             # This problem causes the performance to be comparable with the normal python multiprocessing.Queue.
@@ -194,7 +194,7 @@ class LumberMill():
             module_config = {}
             module_id = None
             if isinstance(module_info, dict):
-                module_class_name = module_info.keys()[0]
+                module_class_name = list(module_info.keys())[0]
                 module_config = module_info[module_class_name]
                 # Set module id. If the id field was used in configuration use it else use class name of module.
                 try:
@@ -231,7 +231,7 @@ class LumberMill():
         This method takes care of setting the default receivers settings.
         """
         # Iterate over all configured modules ordered as they appear in the current configuration.
-        for module_name, module_info in self.modules.items():
+        for module_name, module_info in list(self.modules.items()):
             # If receivers is configured we can skip to next module.
             if 'receivers' in module_info['configuration']:
                 continue
@@ -245,7 +245,7 @@ class LumberMill():
             # Set receiver to next module in config if no receivers were set.
             # Get next module in configuration.
             try:
-                receiver_module_name = [nxt_mod_name for nxt_mod_name, nxt_mod_info in self.modules.items() if nxt_mod_info['idx'] == module_info['idx'] + 1][0]
+                receiver_module_name = [nxt_mod_name for nxt_mod_name, nxt_mod_info in list(self.modules.items()) if nxt_mod_info['idx'] == module_info['idx'] + 1][0]
             except:
                 # Something is wrong with the configuration. Tell user.
                 etype, evalue, etb = sys.exc_info()
@@ -259,7 +259,7 @@ class LumberMill():
 
     def configureModules(self):
         """Call configuration method of module."""
-        for module_name, module_info in sorted(self.modules.items(), key=lambda x: x[1]['idx']):
+        for module_name, module_info in sorted(list(self.modules.items()), key=lambda x: x[1]['idx']):
             for module_instance in module_info['instances']:
                 module_instance.configure(module_info['configuration'])
 
@@ -274,13 +274,13 @@ class LumberMill():
         """
         queues = {}
         # Iterate over all configured modules.
-        for module_name, module_info in self.modules.items():
+        for module_name, module_info in list(self.modules.items()):
             sender_instance = module_info['instances'][0]
             for receiver_data in sender_instance.getConfigurationValue('receivers'):
                 if not receiver_data:
                     break
                 if isinstance(receiver_data, dict):
-                    receiver_name, _ = iter(receiver_data.items()).next()
+                    receiver_name, _ = next(iter(list(receiver_data.items())))
                 else:
                     receiver_name = receiver_data
                 if receiver_name not in self.modules:
@@ -326,7 +326,7 @@ class LumberMill():
         The thread will not survive a fork of the main process. So we need to start this
         after the fork was executed.
         """
-        for module_name, module_info in sorted(self.modules.items(), key=lambda x: x[1]['idx']):
+        for module_name, module_info in sorted(list(self.modules.items()), key=lambda x: x[1]['idx']):
             for instance in module_info['instances']:
                 if instance.can_run_forked:
                     instance.initAfterFork()
@@ -338,7 +338,7 @@ class LumberMill():
         Start the configured modules if they poll queues.
         """
         # All modules are completely configured, call modules run method if it exists.
-        for module_name, module_info in sorted(self.modules.items(), key=lambda x: x[1]['idx']):
+        for module_name, module_info in sorted(list(self.modules.items()), key=lambda x: x[1]['idx']):
             if self.is_master():
                 start_message = "%s - %s" % (module_name, module_info['instances'][0].getStartMessage())
                 self.logger.info(start_message)
@@ -359,7 +359,7 @@ class LumberMill():
     def getAllQueues(self):
         """ Get all configured queues to check for pending events. """
         module_queues = {}
-        for module_name, module_info in self.modules.items():
+        for module_name, module_info in list(self.modules.items()):
             instance = module_info['instances'][0]
             if not hasattr(instance, 'getInputQueue') or not instance.getInputQueue():
                 continue
@@ -460,7 +460,7 @@ class LumberMill():
 
     def shutDownModules(self):
         # Shutdown all input modules.
-        for module_name, module_info in self.modules.items():
+        for module_name, module_info in list(self.modules.items()):
             for instance in module_info['instances']:
                 if instance.module_type == "input":
                     instance.shutDown()
@@ -471,7 +471,7 @@ class LumberMill():
             while wait_loops < 5:
                 wait_loops += 1
                 events_in_queues = 0
-                for module_name, queue in module_queues.items():
+                for module_name, queue in list(module_queues.items()):
                     events_in_queues += queue.qsize()
                 if events_in_queues > 0:
                     # Give remaining queued events some time to finish.
@@ -481,13 +481,13 @@ class LumberMill():
                     continue
                 break
         # Shutdown all other modules.
-        for module_name, module_info in self.modules.items():
+        for module_name, module_info in list(self.modules.items()):
             for instance in module_info['instances']:
                 if instance.module_type != "input":
                     instance.shutDown()
 
 def usage():
-    print('Usage: ' + sys.argv[0] + ' -c <path/to/config.conf> --configtest')
+    print(('Usage: ' + sys.argv[0] + ' -c <path/to/config.conf> --configtest'))
 
 def main():
     path_to_config_file = ""

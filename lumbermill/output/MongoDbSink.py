@@ -97,7 +97,7 @@ class MongoDbSink(BaseThreadedModule):
                 self.logger.error("Could not find doc_id %s for event %s." % (self.doc_id_pattern, event))
                 continue
             event['_id'] = doc_id
-            if collection_name not in bulk_objects.keys():
+            if collection_name not in list(bulk_objects.keys()):
                 bulk_objects[collection_name] = mongo_db[collection_name].initialize_ordered_bulk_op()
             try:
                 bulk_objects[collection_name].insert(event)
@@ -107,7 +107,7 @@ class MongoDbSink(BaseThreadedModule):
                 self.logger.debug("Payload: %s" % event)
                 if "Broken pipe" in evalue or "Connection reset by peer" in evalue:
                     self.mongodb = self.connect()
-        for collection_name, bulk_object in bulk_objects.iteritems():
+        for collection_name, bulk_object in bulk_objects.items():
             try:
                 result = bulk_object.execute()
                 self.logger.debug(str(result))

@@ -4,7 +4,7 @@ import logging
 import multiprocessing
 import sys
 import time
-from cStringIO import StringIO
+from io import StringIO
 
 import pywebhdfs
 from pywebhdfs.webhdfs import PyWebHdfsClient
@@ -170,7 +170,7 @@ class WebHdfsSink(BaseThreadedModule):
             write_data[filename] += line
         write_tries = 0
         retry_sleep_time = .4
-        for filename, lines in write_data.items():
+        for filename, lines in list(write_data.items()):
             if self.compress == 'gzip':
                 filename += ".gz"
                 lines = self.compressGzip(lines)

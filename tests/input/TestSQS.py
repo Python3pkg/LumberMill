@@ -46,7 +46,7 @@ class TestSQS(ModuleBaseTestCase):
             self.sqs_queue = self.sqs_resource.create_queue(QueueName=self.queue_name)
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not create sqs queue %s. Exception: %s, Error: %s" % (self.queue_name, etype, evalue)
+            print("Could not create sqs queue %s. Exception: %s, Error: %s" % (self.queue_name, etype, evalue))
 
     def testSQS(self):
         self.test_object.configure({'aws_access_key_id': os.environ['AWS_ID'],

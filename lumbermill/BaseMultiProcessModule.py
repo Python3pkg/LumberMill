@@ -2,7 +2,7 @@
 import os
 import multiprocessing
 import signal
-import BaseModule
+from . import BaseModule
 
 
 class BaseMultiProcessModule(BaseModule.BaseModule, multiprocessing.Process): #

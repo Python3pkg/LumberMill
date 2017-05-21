@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import sys
-from cStringIO import StringIO
+from io import StringIO
 
 from lumbermill.BaseThreadedModule import BaseThreadedModule
 from lumbermill.utils.Decorators import ModuleDocstringParser

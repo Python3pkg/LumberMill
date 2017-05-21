@@ -8,7 +8,7 @@ import collections
 
 class ServerConfiguration(UIModule):
     def render(self, webserver_module, render_type="text"):
-        print self.__dict__
+        print(self.__dict__)
         if render_type == "text":
             return self.render_string("server_configuration_text.html", node=node)
         else:
@@ -16,5 +16,5 @@ class ServerConfiguration(UIModule):
 
     def getServerConfiguration(self, webserver_module):
         modules_info = collections.OrderedDict()
-        for module_id, module_info in sorted(webserver_module.gp.modules.items(), key=lambda x: x[1]['idx']):
+        for module_id, module_info in sorted(list(webserver_module.gp.modules.items()), key=lambda x: x[1]['idx']):
             modules_info[module_id] = {'id': module_id, 'type': module_info['type'], 'configuration': module_info['configuration']}

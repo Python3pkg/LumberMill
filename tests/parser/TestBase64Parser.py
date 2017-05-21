@@ -39,4 +39,4 @@ class TestBase64Parser(ModuleBaseTestCase):
         data = DictUtils.getDefaultEventDict({'encodeme': payload})
         for event in self.test_object.handleEvent(data):
             self.assertTrue(event['encoded'] == 'SSBjdXQgZG93biB0cmVlcywgSSBza2lwIGFuZCBqdW1wLCBJIGxpa2UgdG8gcHJlc3Mgd2lsZCBmbG93ZXJzLiBJIHB1dCBvbiB3b21lbidzIGNsb3RoaW5nIGFuZCBoYW5nIGFyb3VuZCBpbiBiYXJzLg==' )
-            self.assertTrue('encodeme' not in event.keys())
+            self.assertTrue('encodeme' not in list(event.keys()))

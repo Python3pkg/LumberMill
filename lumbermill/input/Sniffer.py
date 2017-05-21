@@ -52,7 +52,7 @@ class Sniffer(BaseThreadedModule):
         self.promiscous_mode = 1 if self.getConfigurationValue('promiscous') else 0
         self.kv_store = self.getConfigurationValue('key_value_store') if self.getConfigurationValue('key_value_store') else {}
         self.packet_decoders = {}
-        for ether_type, ether_protocol in PROTOCOL_TO_NAMES.items():
+        for ether_type, ether_protocol in list(PROTOCOL_TO_NAMES.items()):
             if "decodePacket%s" % ether_protocol in dir(self):
                 self.packet_decoders[ether_type] = getattr(self, "decodePacket%s" % ether_protocol)
         try:
@@ -90,7 +90,7 @@ class Sniffer(BaseThreadedModule):
         while self.alive:
             packet = None
             try:
-                pcap_header, packet = self.sniffer.next()
+                pcap_header, packet = next(self.sniffer)
             except:
                 pass
             if not packet:
@@ -142,7 +142,7 @@ class PacketDecoderEthernet(BasePacketDecoder):
         decoded_packet = self.decoder.decode(packet)
         next_layer_packet = decoded_packet.child()
         #pprint.pprint(dir(next_layer_packet))
-        print(isinstance(next_layer_packet,IP))
+        print((isinstance(next_layer_packet,IP)))
 
 class PacketDecoderIPv4(BasePacketDecoder):
 
@@ -332,7 +332,7 @@ class PacketDecoderTCP(BasePacketDecoder):
         data_offset = data_offset * 4
         packet_ctrl_flags = data_offset_reserved & 0x3f
         packet['tcp_ctrl_flags'] = []
-        for tcp_flag_name, tcp_flag_mask in self.ctrl_flags.items():
+        for tcp_flag_name, tcp_flag_mask in list(self.ctrl_flags.items()):
             if packet_ctrl_flags & tcp_flag_mask == tcp_flag_mask:
                packet['tcp_ctrl_flags'].append(tcp_flag_name)
         packet['protocols'].append('TCP')

@@ -3,7 +3,7 @@ import zmq
 import sys
 import time
 import threading
-import Queue
+import queue
 
 def usage():
     sys.stdout = sys.stderr
@@ -42,7 +42,7 @@ class Worker(threading.Thread):
             self.connected = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print("Failed to connect to %s:%s. Exception: %s, Error: %s." % (host, port, etype, evalue))
+            print(("Failed to connect to %s:%s. Exception: %s, Error: %s." % (host, port, etype, evalue)))
             self.connected = False
         while self.connected:
             try:
@@ -51,7 +51,7 @@ class Worker(threading.Thread):
                     sock.send(message)
                 else:
                     sock.send('LoadTest %s' % message)
-            except Queue.Empty:
+            except queue.Empty:
                 self.connected = False
                 break
         sock.close()
@@ -62,13 +62,13 @@ class ZmqLoadTester():
     def __init__(self, num_workers=10):
         self.lock = threading.Lock()
         self.counter = 0
-        self.queue = Queue.Queue(10)
+        self.queue = queue.Queue(10)
         self.num_workers = num_workers
 
     def start(self, message):
         total_item_count = count
         workers = set()
-        for i in xrange(0, self.num_workers):
+        for i in range(0, self.num_workers):
             worker = Worker(self.queue)
             worker.start()
             workers.add(worker)
@@ -77,7 +77,7 @@ class ZmqLoadTester():
                 sys.exit()
         print("Start load test.")
         start = time.time()
-        for counter in xrange(0, total_item_count):
+        for counter in range(0, total_item_count):
             if counter % 1000 == 0:
                 sys.stdout.write("Message already sent: %s. Mean req/s: %s\r" % (counter+1, counter / (time.time()-start)))
                 sys.stdout.flush()
@@ -86,7 +86,7 @@ class ZmqLoadTester():
         for worker in workers:
             worker.join()
         stop = time.time()
-        print("Message sent: %s. Took %s. Mean req/s: %s" % (counter+1, stop-start, total_item_count / (stop-start)))
+        print(("Message sent: %s. Took %s. Mean req/s: %s" % (counter+1, stop-start, total_item_count / (stop-start))))
 
 if __name__ == '__main__':
     lt = ZmqLoadTester(5)

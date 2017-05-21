@@ -48,7 +48,7 @@ class TestSQSSink(ModuleBaseTestCase):
             self.sqs_queue = self.sqs_resource.create_queue(QueueName=self.queue_name)
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not create sqs queue %s. Exception: %s, Error: %s" % (self.queue_name, etype, evalue)
+            print("Could not create sqs queue %s. Exception: %s, Error: %s" % (self.queue_name, etype, evalue))
 
     def testSQSSink(self):
         self.test_object.configure({'aws_access_key_id': os.environ['AWS_ID'],
@@ -59,8 +59,8 @@ class TestSQSSink(ModuleBaseTestCase):
         self.test_object.initAfterFork()
         # Send some messages to the test queue.
         for _ in range(0, 100):
-            event = DictUtils.getDefaultEventDict({u'data': u"You get 'Gone with the Wind', 'Les Miserables' by Victor Hugo, "
-                                                        u"'The French Lieutenant's Woman' and with every third book you get dung."})
+            event = DictUtils.getDefaultEventDict({'data': "You get 'Gone with the Wind', 'Les Miserables' by Victor Hugo, "
+                                                        "'The French Lieutenant's Woman' and with every third book you get dung."})
             self.test_object.receiveEvent(event)
         self.test_object.shutDown()
         # Give messages some time to arrive.

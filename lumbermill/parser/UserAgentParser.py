@@ -50,7 +50,7 @@ class UserAgentParser(BaseThreadedModule):
         BaseThreadedModule.configure(self, configuration)
         self.source_fields = self.getConfigurationValue('source_fields')
         # Allow single string as well.
-        if isinstance(self.source_fields, types.StringTypes):
+        if isinstance(self.source_fields, str):
             self.source_fields = [self.source_fields]
         self.target_field = self.getConfigurationValue('target_field')
         self.in_mem_cache = MemoryCache(size=1000)

@@ -174,13 +174,13 @@ class Pack(BaseThreadedModule):
             self.logger.warning("Could not send message %s to %s. Exception: %s, Error: %s." % (message, ip_address, etype, evalue))
 
     def sendMessageToPackFollower(self, pack_member, message):
-        if pack_member not in self.pack_followers.values():
+        if pack_member not in list(self.pack_followers.values()):
             self.logger.warning('Can not send message to unknown pack follower %s.' % pack_member)
             return
         self.sendMessage(message, pack_member.getIp())
 
     def sendMessageToPack(self, message):
-        for pack_member in self.pack_followers.itervalues():
+        for pack_member in self.pack_followers.values():
             self.sendMessageToPackFollower(pack_member, message)
 
     def sendMessageToPackLeader(self, message):
@@ -215,7 +215,7 @@ class Pack(BaseThreadedModule):
             if message['cluster'] != self.cluster_name or message['sender'] == self.hostname:
                 continue
             self.logger.info("Received message %s from %s." % (message, host[0]))
-            if message['action'] not in self.handlers.keys():
+            if message['action'] not in list(self.handlers.keys()):
                 self.logger.warning('Got request for unknown handler %s.' % message['action'])
             # Excecute callbacks
             for callback in self.handlers["%s" % message['action']]:
@@ -236,7 +236,7 @@ class Pack(BaseThreadedModule):
         """
         Leader sends alive requests to all dicovered followers every 10 seconds.
         """
-        for ip_address, pack_follower in self.pack_followers.items():
+        for ip_address, pack_follower in list(self.pack_followers.items()):
             message = self.getDefaultMessageDict(action='alive_request')
             self.sendMessageToPackFollower(pack_follower, message)
 
@@ -247,7 +247,7 @@ class Pack(BaseThreadedModule):
         @see PackMember.isAlive() and PackMember.updateLastSeen()
         """
         with self.lock:
-            for ip_address, pack_follower in self.pack_followers.items():
+            for ip_address, pack_follower in list(self.pack_followers.items()):
                 if pack_follower.isAlive():
                     continue
                 self.logger.warning('Dropping dead pack follower %s, %s.' % (pack_follower.getHostName(), ip_address))

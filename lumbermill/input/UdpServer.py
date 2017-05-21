@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import Queue
-import SocketServer
+import queue
+import socketserver
 import logging
 import socket
 import sys
@@ -11,7 +11,7 @@ from lumbermill.BaseModule import BaseModule
 from lumbermill.utils.Decorators import ModuleDocstringParser
 
 
-class ThreadPoolMixIn(SocketServer.ThreadingMixIn):
+class ThreadPoolMixIn(socketserver.ThreadingMixIn):
     """
     Use a thread pool instead of a new thread on every request.
 
@@ -29,7 +29,7 @@ class ThreadPoolMixIn(SocketServer.ThreadingMixIn):
         Handle one request at a time until doomsday.
         """
         # Set up the threadpool.
-        self.requests = Queue.Queue(self.numThreads)
+        self.requests = queue.Queue(self.numThreads)
 
         for x in range(self.numThreads):
             t = threading.Thread(target=self.process_request_thread)
@@ -47,7 +47,7 @@ class ThreadPoolMixIn(SocketServer.ThreadingMixIn):
         obtain request from queue instead of directly from server socket
         """
         while True:
-            SocketServer.ThreadingMixIn.process_request_thread(self, *self.requests.get())
+            socketserver.ThreadingMixIn.process_request_thread(self, *self.requests.get())
 
 
     def handle_request(self):
@@ -58,18 +58,18 @@ class ThreadPoolMixIn(SocketServer.ThreadingMixIn):
             request, client_address = self.get_request()
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Exception: %s, Error: %s." % (etype, evalue)
+            print("Exception: %s, Error: %s." % (etype, evalue))
             return
         #if self.verify_request(request, client_address):
         self.requests.put((request, client_address))
 
 
-class ThreadedUdpRequestHandler(SocketServer.BaseRequestHandler):
+class ThreadedUdpRequestHandler(socketserver.BaseRequestHandler):
 
     def __init__(self, udp_server_instance, *args, **keys):
         self.udp_server_instance = udp_server_instance
         self.logger = logging.getLogger(self.__class__.__name__)
-        SocketServer.BaseRequestHandler.__init__(self, *args, **keys)
+        socketserver.BaseRequestHandler.__init__(self, *args, **keys)
 
     def handle(self):
         try:
@@ -80,17 +80,17 @@ class ThreadedUdpRequestHandler(SocketServer.BaseRequestHandler):
             port = self.client_address[1]
             event = DictUtils.getDefaultEventDict({"data": data}, received_from="%s:%s" % (host, port),caller_class_name='UdpServer')
             self.udp_server_instance.sendEvent(event)
-        except socket.error, e:
+        except socket.error as e:
            self.logger.warning("Error occurred while reading from socket. Error: %s" % (e))
-        except socket.timeout, e:
+        except socket.timeout as e:
             self.logger.warning("Timeout occurred while reading from socket. Error: %s" % (e))
 
-class ThreadedUdpServer(ThreadPoolMixIn, SocketServer.UDPServer):
+class ThreadedUdpServer(ThreadPoolMixIn, socketserver.UDPServer):
 
     allow_reuse_address = True
 
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True, timeout=None):
-        SocketServer.UDPServer.__init__(self, server_address, RequestHandlerClass)
+        socketserver.UDPServer.__init__(self, server_address, RequestHandlerClass)
         self.socket.settimeout(timeout)
         self.timeout = timeout
 

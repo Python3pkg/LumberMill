@@ -116,7 +116,7 @@ class KeyDotNotationDict(dict):
 
 class DotDictFormatter(Formatter):
     try:  # deal with Py 2 & 3 difference
-        NUMERICS = (int, long)
+        NUMERICS = (int, int)
     except NameError:
         NUMERICS = int
 

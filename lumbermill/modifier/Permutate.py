@@ -57,13 +57,13 @@ class Permutate(BaseThreadedModule):
                     # Rewrite the context data keys to new keys in context_target_mapping
                     ctx_data = {}
                     for idx, dct in enumerate([context_data[key] for key in permutation if key in context_data]):
-                        for mapping_key, newkeys in context_target_mapping.items():
+                        for mapping_key, newkeys in list(context_target_mapping.items()):
                             if mapping_key in dct:
                                ctx_data[newkeys[idx]] = dct[mapping_key]
                     event_copy.update(ctx_data)
                 except:
                     etype, evalue, etb = sys.exc_info()
                     self.logger.warning("Could not add context data. Exception: %s, Error: %s." % (etype, evalue))
-            perm = dict(zip(target_field_names, permutation))
+            perm = dict(list(zip(target_field_names, permutation)))
             event_copy.update(perm)
             yield event_copy

@@ -13,7 +13,7 @@ DYNAMIC_VALUE_REPLACE_PATTERN = r"%(\1)"
 
 # Conditional imports for python2/3
 try:
-    import __builtin__ as builtins
+    import builtins as builtins
 except ImportError:
     import builtins
 
@@ -90,7 +90,7 @@ def parseDynamicValuesInList(value_list, contains_dynamic_value):
             parseDynamicValuesInList(value_list[idx], contains_dynamic_value)
         elif isinstance(value, dict):
             parseDynamicValuesInDict(value_list[idx], contains_dynamic_value)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             new_value = parseDynamicValuesInString(value)
             if new_value == value:
                 continue
@@ -100,15 +100,15 @@ def parseDynamicValuesInList(value_list, contains_dynamic_value):
 def parseDynamicValuesInDict(value_dict, contains_dynamic_value):
     # Copy dict since we might change it during iteration.
     value_dict_copy = value_dict.copy()
-    for key, value in value_dict_copy.items():
+    for key, value in list(value_dict_copy.items()):
         new_key = key
-        if(isinstance(key, basestring)):
+        if(isinstance(key, str)):
             new_key = parseDynamicValuesInString(key)
         if isinstance(value, list):
             parseDynamicValuesInList(value_dict[key], contains_dynamic_value)
         elif isinstance(value, dict):
             parseDynamicValuesInDict(value_dict[key], contains_dynamic_value)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             new_value = parseDynamicValuesInString(value)
             if key == new_key and value == new_value:
                 continue
@@ -123,7 +123,7 @@ def parseDynamicValue(value):
         parseDynamicValuesInList(value, contains_dynamic_value)
     elif isinstance(value, dict):
         parseDynamicValuesInDict(value, contains_dynamic_value)
-    elif isinstance(value, basestring):
+    elif isinstance(value, str):
         new_value = parseDynamicValuesInString(value)
         if value != new_value:
             value = new_value
@@ -159,29 +159,29 @@ def mapDynamicValueInList(value_list, mapping_dict, use_strftime=False):
             mapDynamicValueInList(value, mapping_dict, use_strftime)
         elif isinstance(value, dict):
             mapDynamicValueInDict(value, mapping_dict, use_strftime)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             new_value = mapDynamicValueInString(value, mapping_dict, use_strftime)
             if new_value == value:
                 continue
             value_list[idx] = new_value
 
 def mapDynamicValueInDict(value_dict, mapping_dict, use_strftime=False):
-    for key, value in value_dict.items():
+    for key, value in list(value_dict.items()):
         new_key = key
-        if(isinstance(key, basestring)):
+        if(isinstance(key, str)):
             new_key = mapDynamicValueInString(key, mapping_dict, use_strftime)
         if isinstance(value, list):
             mapDynamicValueInList(value, mapping_dict, use_strftime)
         elif isinstance(value, dict):
             mapDynamicValueInDict(value, mapping_dict, use_strftime)
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             new_value = mapDynamicValueInString(value, mapping_dict, use_strftime)
             if key == new_key and value == new_value:
                 continue
             value_dict[new_key] = new_value
 
 def mapDynamicValue(value, mapping_dict={}, use_strftime=False):
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         return mapDynamicValueInString(value, mapping_dict, use_strftime)
     if isinstance(value, list):
         # If value is of type list or dict, the next operations might have some nice recursion.

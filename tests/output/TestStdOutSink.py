@@ -2,7 +2,7 @@ import sys
 import time
 import lumbermill.utils.DictUtils as DictUtils
 
-from cStringIO import StringIO
+from io import StringIO
 from tests.ModuleBaseTestCase import ModuleBaseTestCase, MockLumberMill
 from lumbermill.output import StdOutSink
 

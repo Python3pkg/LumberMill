@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 import lumbermill.utils.DictUtils as DictUtils
 from lumbermill.BaseThreadedModule import BaseThreadedModule
@@ -104,13 +104,13 @@ class HttpRequest(BaseThreadedModule, ModuleCacheMixin):
 
     def execRequest(self, url):
         try:
-            response = urllib2.urlopen(url)
+            response = urllib.request.urlopen(url)
             return response
-        except urllib2.HTTPError, e:
+        except urllib.error.HTTPError as e:
             etype, evalue, etb = sys.exc_info()
             self.logger.error("Request to %s failed. Exception: %s, Error: %s" % (url, etype, evalue))
             raise
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             etype, evalue, etb = sys.exc_info()
             self.logger.error("Request to %s failed. Exception: %s, Error: %s" % (url, etype, evalue))
             raise

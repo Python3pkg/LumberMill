@@ -102,7 +102,7 @@ class TestFile(ModuleBaseTestCase):
         self.test_object.lumbermill.setWorkerCount(worker_count)
         all_files = copy.copy(self.test_object.files)
         worker_files = []
-        for _ in xrange(0, self.test_object.lumbermill.getWorkerCount()):
+        for _ in range(0, self.test_object.lumbermill.getWorkerCount()):
             self.test_object.initAfterFork()
             worker_files.append(copy.copy(self.test_object.files))
             self.test_object.files = copy.copy(all_files)

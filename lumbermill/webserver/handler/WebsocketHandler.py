@@ -42,13 +42,13 @@ class LogToWebSocketHandler(tornado.websocket.WebSocketHandler, BaseHandler):
         # Create new log handler.
         self.ws_stream_handler = WebsocketLoggingHandler(self)
         # Get all configured modules and register our log handler.
-        for module_name, module_info in sorted(self.webserver_module.gp.modules.items(), key=lambda x: x[1]['idx']):
+        for module_name, module_info in sorted(list(self.webserver_module.gp.modules.items()), key=lambda x: x[1]['idx']):
             for instance in module_info['instances']:
                 instance.logger.addHandler(self.ws_stream_handler)
 
     def on_close(self):
         # Get all configured modules and unregister our log handler.
-        for module_name, module_info in sorted(self.webserver_module.gp.modules.items(), key=lambda x: x[1]['idx']):
+        for module_name, module_info in sorted(list(self.webserver_module.gp.modules.items()), key=lambda x: x[1]['idx']):
             for instance in module_info['instances']:
                 instance.logger.removeHandler(self.ws_stream_handler)
 
@@ -96,7 +96,7 @@ class StatisticsWebSocketHandler(tornado.websocket.WebSocketHandler, BaseHandler
     def eventsInQueuesStatistics(self):
         if len(self.statistic_module.module_queues) == 0:
             return
-        for module_name, queue in self.statistic_module.module_queues.items():
+        for module_name, queue in list(self.statistic_module.module_queues.items()):
             self.write_message(tornado.escape.json_encode({'timestamp': time.time(),
                                                             'module_name': module_name,
                                                             'queue_size': queue.qsize()}))

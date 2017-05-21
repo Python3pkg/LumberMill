@@ -2,7 +2,7 @@
 import sys
 import time
 import threading
-import Queue
+import queue
 import boto3
 
 
@@ -49,19 +49,19 @@ class Worker(threading.Thread):
             self.connected = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print("Could not connect to sqs service. Exception: %s, Error: %s." % (etype, evalue))
+            print(("Could not connect to sqs service. Exception: %s, Error: %s." % (etype, evalue)))
             return
         try:
             sqs_queue = sqs_client.get_queue_by_name(QueueName=queue_name)
         except:
             etype, evalue, etb = sys.exc_info()
-            print("Could not connect to sqs queue %s. Exception: %s, Error: %s." % (queue_name, etype, evalue))
+            print(("Could not connect to sqs queue %s. Exception: %s, Error: %s." % (queue_name, etype, evalue)))
             return
         while self.connected:
             try:
                 message = self.queue.get(timeout=.5)
                 sqs_queue.send_message(MessageBody=message)
-            except Queue.Empty:
+            except queue.Empty:
                 self.connected = False
                 break
         return
@@ -71,13 +71,13 @@ class SqsLoadTester():
     def __init__(self, num_workers=10):
         self.lock = threading.Lock()
         self.counter = 0
-        self.queue = Queue.Queue(10)
+        self.queue = queue.Queue(10)
         self.num_workers = num_workers
 
     def start(self, message):
         total_item_count = count
         workers = set()
-        for i in xrange(0, self.num_workers):
+        for i in range(0, self.num_workers):
             worker = Worker(self.queue)
             worker.start()
             workers.add(worker)
@@ -86,7 +86,7 @@ class SqsLoadTester():
                 sys.exit()
         print("Start load test.")
         start = time.time()
-        for counter in xrange(0, total_item_count):
+        for counter in range(0, total_item_count):
             if counter % 1000 == 0:
                 sys.stdout.write("Message already sent: %s. Mean req/s: %s\r" % (counter+1, counter / (time.time()-start)))
                 sys.stdout.flush()
@@ -95,7 +95,7 @@ class SqsLoadTester():
         for worker in workers:
             worker.join()
         stop = time.time()
-        print("Message sent: %s. Took %s. Mean req/s: %s" % (counter+1, stop-start, total_item_count / (stop-start)))
+        print(("Message sent: %s. Took %s. Mean req/s: %s" % (counter+1, stop-start, total_item_count / (stop-start))))
 
 if __name__ == '__main__':
     lt = SqsLoadTester(5)

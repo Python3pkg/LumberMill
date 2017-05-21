@@ -45,8 +45,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'LumberMill LogParser'
-copyright = u'2015, Björn Puttmann'
+project = 'LumberMill LogParser'
+copyright = '2015, Björn Puttmann'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -198,8 +198,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'GambolPuttyLogParser.tex', u'LumberMill LogParser Documentation',
-   u'Björn Puttmann', 'manual'),
+  ('index', 'GambolPuttyLogParser.tex', 'LumberMill LogParser Documentation',
+   'Björn Puttmann', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -228,8 +228,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'gambolputtylogparser', u'LumberMill LogParser Documentation',
-     [u'Björn Puttmann'], 1)
+    ('index', 'gambolputtylogparser', 'LumberMill LogParser Documentation',
+     ['Björn Puttmann'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -242,8 +242,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'GambolPuttyLogParser', u'LumberMill LogParser Documentation',
-   u'Björn Puttmann', 'GambolPuttyLogParser', 'One line description of project.',
+  ('index', 'GambolPuttyLogParser', 'LumberMill LogParser Documentation',
+   'Björn Puttmann', 'GambolPuttyLogParser', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -27,7 +27,7 @@ class MainHandler(BaseHandler):
             cluster_module = cluster_info['instances'][0]
             localnode['server_type'] = "PackLeader" if cluster_module.leader else "PackMember"
             if cluster_module.leader:
-                for pack_member in cluster_module.getPackMembers().itervalues():
+                for pack_member in cluster_module.getPackMembers().values():
                     nodes.append({'server_name': pack_member.getHostName(),
                                   'server_type': "PackLeader" if pack_member.leader else "PackMember"})
         nodes.insert(0, localnode)

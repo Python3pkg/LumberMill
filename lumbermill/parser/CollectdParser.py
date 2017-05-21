@@ -38,7 +38,7 @@ class CollectdParser(BaseThreadedModule):
         BaseThreadedModule.configure(self, configuration)
         self.source_fields = self.getConfigurationValue('source_fields')
         # Allow single string as well.
-        if isinstance(self.source_fields, types.StringTypes):
+        if isinstance(self.source_fields, str):
             self.source_fields = [self.source_fields]
         self.target_field = self.getConfigurationValue('target_field')
         self.drop_original = not self.getConfigurationValue('keep_original')
@@ -287,7 +287,7 @@ class Data(object):
     typeinstance = None
 
     def __init__(self, **kw):
-        for k,v in kw.iteritems():
+        for k,v in kw.items():
             setattr(self, k, v)
 
     @property
@@ -442,6 +442,6 @@ class Parser(object):
             Otherwise no raise should occur to return the generator.
             But the returned generator can raise (subclass-)`CollectdException´ instance if a decode problem occurs.
         """
-        if isinstance(input, (type(None), basestring)):
+        if isinstance(input, (type(None), str)):
             input = self.decode(input)
         return self.interpret_opcodes(input)

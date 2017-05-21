@@ -62,7 +62,7 @@ class GetServerInformation(BaseHandler):
 class GetServerConfiguration(BaseHandler):
     def get(self):
         modules_info = collections.OrderedDict()
-        for module_id, module_info in sorted(self.webserver_module.gp.modules.items(), key=lambda x: x[1]['idx']):
+        for module_id, module_info in sorted(list(self.webserver_module.gp.modules.items()), key=lambda x: x[1]['idx']):
             modules_info[module_id] = {'id': module_id, 'type': module_info['type'], 'configuration': module_info['configuration']}
         self.write(tornado.escape.json_encode(modules_info))
 

@@ -106,7 +106,7 @@ class TestZmq(ModuleBaseTestCase):
             sock.connect('tcp://%s:%s' % (host, port))
         except:
             etype, evalue, etb = sys.exc_info()
-            print("Failed to connect to %s:%s. Exception: %s, Error: %s." % (host, port, etype, evalue))
+            print(("Failed to connect to %s:%s. Exception: %s, Error: %s." % (host, port, etype, evalue)))
             return None
         return sock
 

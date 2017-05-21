@@ -32,7 +32,7 @@ class TestTcpServer(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         expected_ret_val = DictUtils.getDefaultEventDict({'data': "Beethoven, Mozart, Chopin, Liszt, Brahms, Panties...I'm sorry...Schumann, Schubert, Mendelssohn and Bach. Names that will live for ever."})
@@ -69,8 +69,8 @@ class TestTcpServer(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ( self.test_object.getConfigurationValue("interface"),
-                                                                            self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ( self.test_object.getConfigurationValue("interface"),
+                                                                            self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         expected_ret_val =  DictUtils.getDefaultEventDict({'data': "Beethoven, Mozart, Chopin, Liszt, Brahms, Panties...I'm sorry...Schumann, Schubert, Mendelssohn and Bach. Names that will live for ever."})
@@ -102,7 +102,7 @@ class TestTcpServer(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         event = None
@@ -131,7 +131,7 @@ class TestTcpServer(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         event = None
@@ -161,7 +161,7 @@ class TestTcpServer(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ( 'localhost', self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         events = []

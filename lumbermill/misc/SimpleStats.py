@@ -53,7 +53,7 @@ class SimpleStats(BaseThreadedModule):
         return runTimedFunctionsFunc
 
     def accumulateEventTypeStats(self):
-        for event_type, count in self.stats_collector.getAllCounters().items():
+        for event_type, count in list(self.stats_collector.getAllCounters().items()):
             if count == 0:
                 continue
             self.mp_stats_collector.incrementCounter(event_type, count)

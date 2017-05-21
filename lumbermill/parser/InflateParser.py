@@ -3,7 +3,7 @@ import gzip
 import sys
 import types
 import zlib
-from cStringIO import StringIO
+from io import StringIO
 
 from lumbermill.BaseThreadedModule import BaseThreadedModule
 from lumbermill.utils.Decorators import ModuleDocstringParser
@@ -39,11 +39,11 @@ class InflateParser(BaseThreadedModule):
         BaseThreadedModule.configure(self, configuration)
         self.source_fields = self.getConfigurationValue('source_fields')
         # Allow single string as well.
-        if isinstance(self.source_fields, types.StringTypes):
+        if isinstance(self.source_fields, str):
             self.source_fields = [self.source_fields]
         self.target_fields = self.getConfigurationValue('target_fields')
         # Allow single string as well.
-        if isinstance(self.target_fields, types.StringTypes):
+        if isinstance(self.target_fields, str):
             self.target_fields = [self.target_fields]
         # If target_fields were provided they need to be of same length as source_fields.
         if self.target_fields and len(self.source_fields) != len(self.target_fields):

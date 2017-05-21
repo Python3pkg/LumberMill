@@ -45,7 +45,7 @@ class ExecPython(BaseThreadedModule):
             exec("import %s" % module)
         source = "def UserFunc(event):\n%s" % self.getConfigurationValue("source")
         if self.getConfigurationValue("debug"):
-            print source
+            print(source)
         exec(source)
         try:
             pass

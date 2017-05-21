@@ -72,7 +72,7 @@ class TestMsgPackParser(ModuleBaseTestCase):
             connection_succeeded = True
         except:
             etype, evalue, etb = sys.exc_info()
-            print "Could not connect to %s:%s. Exception: %s, Error: %s" % ('localhost', self.test_object.getConfigurationValue("port"), etype, evalue)
+            print("Could not connect to %s:%s. Exception: %s, Error: %s" % ('localhost', self.test_object.getConfigurationValue("port"), etype, evalue))
             connection_succeeded = False
         self.assertTrue(connection_succeeded)
         s.sendall(msgpack.packb(orig_event))

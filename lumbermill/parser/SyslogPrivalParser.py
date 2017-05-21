@@ -102,8 +102,8 @@ class SyslogPrivalParser(BaseThreadedModule):
         # Call parent configure method
         BaseThreadedModule.configure(self, configuration)
         self.source_field = self.getConfigurationValue('source_field')
-        self.facility_mappings = dict(self.rfc_5424_facilities.items() + self.getConfigurationValue('facility_mappings').items())
-        self.severity_mappings = dict(self.rfc_5424_severities.items() + self.getConfigurationValue('severity_mappings').items())
+        self.facility_mappings = dict(list(self.rfc_5424_facilities.items()) + list(self.getConfigurationValue('facility_mappings').items()))
+        self.severity_mappings = dict(list(self.rfc_5424_severities.items()) + list(self.getConfigurationValue('severity_mappings').items()))
 
     def handleEvent(self, event):
         try:

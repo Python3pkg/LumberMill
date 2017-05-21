@@ -28,7 +28,7 @@ class TestMapDynaimcValue(unittest.TestCase):
                  'remote_ip': '192.168.2.20',
                  'url': 'GET /wiki/Monty_Python/?spanish=inquisition HTTP/1.0',
                  'fields': ['nobody', 'expects', 'the'],
-                 'params': { u'spanish': [u'inquisition']},
+                 'params': { 'spanish': ['inquisition']},
                  'user': '-'}
         self.event = DictUtils.getDefaultEventDict(event)
 

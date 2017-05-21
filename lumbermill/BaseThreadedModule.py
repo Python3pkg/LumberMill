@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import threading
-import BaseModule
+from . import BaseModule
 
 
 # Conditional imports for python2/3
 try:
-    import Queue as queue
+    import queue as queue
 except ImportError:
     import queue
 

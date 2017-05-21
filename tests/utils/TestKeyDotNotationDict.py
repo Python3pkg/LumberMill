@@ -20,14 +20,14 @@ class TestKeyDotNotationDict(unittest.TestCase):
                  'remote_ip': '192.168.2.20',
                  'url': 'GET /wiki/Monty_Python/?spanish=inquisition HTTP/1.0',
                  'fields': ['nobody', 'expects', 'the'],
-                 'params':  { u'spanish': [u'inquisition']},
+                 'params':  { 'spanish': ['inquisition']},
                  'user': '-'}
         self.event = DictUtils.getDefaultEventDict(event)
 
     def testDotAccessToDict(self):
         self.assertTrue(self.event['bytes_send'] == 3395)
         self.assertTrue(self.event['lumbermill.event_id'] == "715bd321b1016a442bf046682722c78e")
-        self.assertTrue(self.event['params.spanish'] == [u'inquisition'])
+        self.assertTrue(self.event['params.spanish'] == ['inquisition'])
 
     def testDotAccessToList(self):
         self.assertTrue(self.event['lumbermill.list.0'] == 10)

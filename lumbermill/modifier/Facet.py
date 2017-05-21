@@ -123,7 +123,7 @@ class Facet(BaseThreadedModule, ModuleCacheMixin):
             cache_facet_keys = self.cache.get(self.cache_key_name)
         except KeyError:
             cache_facet_keys = []
-        for key, facet_data in Facet.facet_data.items():
+        for key, facet_data in list(Facet.facet_data.items()):
             current_facet_data = None
             if key in cache_facet_keys:
                 current_facet_data = self.cache.get(key)

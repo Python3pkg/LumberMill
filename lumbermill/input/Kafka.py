@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from kafka import KafkaConsumer
+from .kafka import KafkaConsumer
 
 import lumbermill.utils.DictUtils as DictUtils
 from lumbermill.BaseThreadedModule import BaseThreadedModule

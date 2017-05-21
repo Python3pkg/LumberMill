@@ -214,10 +214,10 @@ class ModifyFields(BaseThreadedModule):
             if isinstance(regex_pattern, list):
                 i = iter(regex_pattern)
                 # Pattern is the first entry
-                regex_pattern = i.next()
+                regex_pattern = next(i)
                 # Regex options the second
                 try:
-                    regex_options = eval(i.next())
+                    regex_options = eval(next(i))
                 except:
                     etype, evalue, etb = sys.exc_info()
                     self.logger.error("RegEx error for options %s. Exception: %s, Error: %s" % (regex_options, etype, evalue))
@@ -423,13 +423,13 @@ class ModifyFields(BaseThreadedModule):
 
     def _rename_regex_recursive(self, dict_to_scan):
         fields_to_rename = {}
-        for field_name, field_value in dict_to_scan.iteritems():
+        for field_name, field_value in dict_to_scan.items():
             new_field_name = self.regex.sub(self.replace, field_name)
             if field_name != new_field_name:
                 fields_to_rename[field_name] = new_field_name
             if self.recursive and isinstance(field_value, dict):
                 self._rename_regex_recursive(field_value)
-        for old_field_name, new_field_name in fields_to_rename.iteritems():
+        for old_field_name, new_field_name in fields_to_rename.items():
             dict_to_scan[new_field_name] = dict_to_scan.pop(old_field_name)
 
     def rename_replace(self, event):
@@ -446,13 +446,13 @@ class ModifyFields(BaseThreadedModule):
 
     def _rename_replace_recursive(self, dict_to_scan):
         fields_to_rename = {}
-        for field_name, field_value in dict_to_scan.iteritems():
+        for field_name, field_value in dict_to_scan.items():
             new_field_name = field_name.replace(self.old, self.new)
             if field_name != new_field_name:
                 fields_to_rename[field_name] = new_field_name
             if self.recursive and isinstance(field_value, dict):
                 self._rename_replace_recursive(field_value)
-        for old_field_name, new_field_name in fields_to_rename.iteritems():
+        for old_field_name, new_field_name in fields_to_rename.items():
             dict_to_scan[new_field_name] = dict_to_scan.pop(old_field_name)
 
     def string_replace(self, event):
@@ -513,7 +513,7 @@ class ModifyFields(BaseThreadedModule):
         except:
             return event
         if self.prefix:
-            kv_dict = dict(map(lambda (key, value): ("%s%s" % (self.prefix, str(key)), value), kv_dict.items()))
+            kv_dict = dict([("%s%s" % (self.prefix, str(key_value1[0])), key_value1[1]) for key_value1 in list(kv_dict.items())])
         if self.target_field:
             event[self.target_field] = kv_dict
         else:
@@ -543,7 +543,7 @@ class ModifyFields(BaseThreadedModule):
         except:
             return event
         if self.prefix:
-            kv_dict = dict(map(lambda (key, value): ("%s%s" % (self.prefix, str(key)), value), kv_dict.items()))
+            kv_dict = dict([("%s%s" % (self.prefix, str(key_value2[0])), key_value2[1]) for key_value2 in list(kv_dict.items())])
         if self.target_field:
             event[self.target_field] = kv_dict
         else:

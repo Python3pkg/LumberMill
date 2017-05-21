@@ -1,4 +1,4 @@
-import StringIO
+import io
 import zlib
 import gzip
 import mock
@@ -17,7 +17,7 @@ class TestInflateParser(ModuleBaseTestCase):
         config = {'source_fields': 'gzip-compressed'}
         self.test_object.configure(config)
         self.checkConfiguration()
-        out = StringIO.StringIO()
+        out = io.StringIO()
         with gzip.GzipFile(fileobj=out, mode="w") as f:
             f.write("Spam! Spam! Spam! Lovely Spam! Spam! Spam!")
         payload = out.getvalue()
@@ -30,7 +30,7 @@ class TestInflateParser(ModuleBaseTestCase):
                   'target_fields': 'gzip-inflated'}
         self.test_object.configure(config)
         self.checkConfiguration()
-        out = StringIO.StringIO()
+        out = io.StringIO()
         with gzip.GzipFile(fileobj=out, mode="w") as f:
             f.write("Spam! Spam! Spam! Lovely Spam! Spam! Spam!")
         payload = out.getvalue()
@@ -44,7 +44,7 @@ class TestInflateParser(ModuleBaseTestCase):
                   'target_fields': ['gzip-inflated1', 'gzip-inflated2']}
         self.test_object.configure(config)
         self.checkConfiguration()
-        out = StringIO.StringIO()
+        out = io.StringIO()
         with gzip.GzipFile(fileobj=out, mode="w") as f:
             f.write("Spam! Spam! Spam! Lovely Spam! Spam! Spam!")
         payload1 = out.getvalue()
@@ -64,7 +64,7 @@ class TestInflateParser(ModuleBaseTestCase):
                   'compression': 'zlib'}
         self.test_object.configure(config)
         self.checkConfiguration()
-        out = StringIO.StringIO()
+        out = io.StringIO()
         with gzip.GzipFile(fileobj=out, mode="w") as f:
             f.write("Spam! Spam! Spam! Lovely Spam! Spam! Spam!")
         payload = out.getvalue()

@@ -64,7 +64,7 @@ class ConfigurationValidator():
                 configuration_errors.append(error_msg)
                 continue
             elif type(configuration_item) is dict:
-                for key, value in configuration_item.items():
+                for key, value in list(configuration_item.items()):
                     mapped_key = 'Module' if key != 'Global' else key
                     item_configuration_errors = self.validateConfigurationItem(mapped_key, value, key)
                     for item_configuration_error in item_configuration_errors:
@@ -84,7 +84,7 @@ class ConfigurationValidator():
                 error_msg = "'%s' not of correct datatype. Is: %s, should be: %s. Please check your configuration." % (path, type(item_value), item_template['types'])
                 configuration_errors.append(error_msg)
             if type(item_value) is dict:
-                for field_key, field_value in item_value.items():
+                for field_key, field_value in list(item_value.items()):
                     field_path = "%s.%s" % (path, field_key)
                     try:
                         field_configuration_errors = self.validateConfigurationItem(field_key, field_value, field_path, template=item_template['fields'])
@@ -115,7 +115,7 @@ class ConfigurationValidator():
             error_msg = "%s: Found unknown configuration keys: %s. Please check module documentation." % (moduleInstance.__class__.__name__, keys)
             result.append(error_msg)
             return result
-        for configuration_key, configuration_metadata in moduleInstance.configuration_metadata.items():
+        for configuration_key, configuration_metadata in list(moduleInstance.configuration_metadata.items()):
             config_value = moduleInstance.getConfigurationValue(configuration_key)
             config_value_datatype = type(config_value)
             # Check for required parameter.
@@ -142,7 +142,7 @@ class ConfigurationValidator():
                     try:
                         allowed_datatypes.append(TYPENAMES_TO_TYPE[allowed_datatypes_as_string.title()])
                     except KeyError:
-                        error_msg = "%s: Docstring config setting for '%s' has unknown datatype '%s'. Supported datatypes: %s" % (moduleInstance.__class__.__name__, configuration_key, allowed_datatypes_as_string.title(), TYPENAMES_TO_TYPE.keys())
+                        error_msg = "%s: Docstring config setting for '%s' has unknown datatype '%s'. Supported datatypes: %s" % (moduleInstance.__class__.__name__, configuration_key, allowed_datatypes_as_string.title(), list(TYPENAMES_TO_TYPE.keys()))
                         result.append(error_msg)
                 if config_value_datatype not in allowed_datatypes:
                     error_msg = "%s: '%s' not of correct datatype. Is: %s, should be: %s" % (moduleInstance.__class__.__name__, configuration_key, config_value_datatype, allowed_datatypes)

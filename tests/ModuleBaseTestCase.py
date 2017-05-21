@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import Queue
+import queue
 import logging
 import logging.config
 import threading
@@ -91,7 +91,7 @@ class MockLumberMill(mock.Mock):
                                      'configuration': module_instances[0].configuration_data}
 
     def shutDown(self):
-        for module_name, mod in self.modules.iteritems():
+        for module_name, mod in self.modules.items():
             mod.shutDown()
 
 class MockReceiver(mock.Mock):
@@ -151,7 +151,7 @@ class ModuleBaseTestCase(unittest.TestCase):
         test_object.addReceiver('MockReceiver', self.receiver)
         self.test_object = test_object
         if hasattr(test_object, 'setInputQueue'):
-            self.input_queue = Queue.Queue()
+            self.input_queue = queue.Queue()
             self.test_object.setInputQueue(self.input_queue)
 
     def checkConfiguration(self):

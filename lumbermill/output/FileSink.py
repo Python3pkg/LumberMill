@@ -3,7 +3,7 @@ import collections
 import os
 import sys
 import time
-from cStringIO import StringIO
+from io import StringIO
 
 from lumbermill.BaseThreadedModule import BaseThreadedModule
 from lumbermill.utils.Buffers import Buffer
@@ -72,7 +72,7 @@ class FileSink(BaseThreadedModule):
         """
         Close and delete file handles that are unused since 5 minutes.
         """
-        for path, file_handle_data in self.file_handles.items():
+        for path, file_handle_data in list(self.file_handles.items()):
             last_used_time_ago = time.time() - file_handle_data['lru']
             if last_used_time_ago < 300:
                 continue
@@ -81,7 +81,7 @@ class FileSink(BaseThreadedModule):
             self.file_handles.pop(path)
 
     def closeAllFileHandles(self):
-        for path, file_handle_data in self.file_handles.items():
+        for path, file_handle_data in list(self.file_handles.items()):
             self.logger.info('Closing file handle for %s.' % path)
             file_handle_data['handle'].close()
             self.file_handles.pop(path)
@@ -115,7 +115,7 @@ class FileSink(BaseThreadedModule):
             path = mapDynamicValue(self.file_name, mapping_dict=event, use_strftime=True)
             line = mapDynamicValue(self.format, mapping_dict=event)
             write_data["%s" % path] += line + "\n"
-        for path, lines in write_data.items():
+        for path, lines in list(write_data.items()):
             try:
                 self.ensurePathExists(path)
             except:

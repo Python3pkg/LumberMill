@@ -6,9 +6,9 @@ import re
 import sys
 from functools import wraps
 
-from constants import LOGLEVEL_STRING_TO_LOGLEVEL_INT
-from utils.ConfigurationValidator import ConfigurationValidator
-from utils.DynamicValues import parseDynamicValue, mapDynamicValue, GP_DYNAMIC_VAL_REGEX_WITH_TYPES
+from .constants import LOGLEVEL_STRING_TO_LOGLEVEL_INT
+from .utils.ConfigurationValidator import ConfigurationValidator
+from .utils.DynamicValues import parseDynamicValue, mapDynamicValue, GP_DYNAMIC_VAL_REGEX_WITH_TYPES
 
 
 class BaseModule:
@@ -75,7 +75,7 @@ class BaseModule:
             for receiver_config in self.getConfigurationValue('receivers'):
                 if not isinstance(receiver_config, dict):
                     continue
-                receiver_name, receiver_filter_config = iter(receiver_config.items()).next()
+                receiver_name, receiver_filter_config = next(iter(list(receiver_config.items())))
                 self.addOutputFilter(receiver_name, receiver_filter_config['filter'])
         self.checkConfiguration()
 
@@ -90,7 +90,7 @@ class BaseModule:
         """
         # Copy dict since we might change it during iteration.
         configuration_data_copy = self.configuration_data.copy()
-        for key, value in configuration_data_copy.iteritems():
+        for key, value in configuration_data_copy.items():
             self.configuration_data[key] = parseDynamicValue(value)
 
     def checkConfiguration(self):
@@ -187,7 +187,7 @@ class BaseModule:
         if not self.output_filters:
             return self.receivers
         filterd_receivers = {}
-        for receiver_name, receiver in self.receivers.items():
+        for receiver_name, receiver in list(self.receivers.items()):
             if receiver_name not in self.output_filters:
                 filterd_receivers[receiver_name] = receiver
                 continue
@@ -211,7 +211,7 @@ class BaseModule:
         So we need to start this after the fork was executed.
         """
         self.process_id = os.getpid()
-        for receiver_name, receiver in self.receivers.items():
+        for receiver_name, receiver in list(self.receivers.items()):
             if hasattr(receiver, 'put'):
                 receiver.startInterval()
 
@@ -219,7 +219,7 @@ class BaseModule:
         #if not self.input_filter or self.input_filter_matched:
         # Add fields if configured.
         if self.add_fields:
-            for field_name, field_value in mapDynamicValue(self.add_fields, event).items():
+            for field_name, field_value in list(mapDynamicValue(self.add_fields, event).items()):
                 try:
                     event[field_name] = field_value
                 except KeyError:
@@ -245,7 +245,7 @@ class BaseModule:
         if len(receivers) > 1:
             event_clone = event.copy()
         copy_event = False
-        for receiver in receivers.values():
+        for receiver in list(receivers.values()):
             self.logger.debug("Sending event from %s to %s" % (self, receiver))
             if hasattr(receiver, 'receiveEvent'):
                 receiver.receiveEvent(event if not copy_event else event_clone.copy())

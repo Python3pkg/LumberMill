@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 
 from lumbermill.BaseThreadedModule import BaseThreadedModule
 from lumbermill.utils.Decorators import ModuleDocstringParser
@@ -56,8 +56,8 @@ class UrlParser(BaseThreadedModule):
             #    decoded_field = urllib.unquote(event[self.source_field]).decode('utf8')
             #except UnicodeDecodeError:
             #    decoded_field = urllib.unquote(unicode(event[self.source_field]))
-            decoded_field = urllib.unquote(unicode(event[self.source_field]))
-            parsed_result = urlparse.urlparse('%s' % decoded_field)
+            decoded_field = urllib.parse.unquote(str(event[self.source_field]))
+            parsed_result = urllib.parse.urlparse('%s' % decoded_field)
             parsed_url = {'scheme': parsed_result.scheme,
                           'netloc': parsed_result.netloc,
                           'path': parsed_result.path,
@@ -70,9 +70,9 @@ class UrlParser(BaseThreadedModule):
                           'port': parsed_result.port}
             event[self.target_field] = parsed_url
             if self.parse_querystring:
-                query_params_dict = urlparse.parse_qs(parsed_result.query)
+                query_params_dict = urllib.parse.parse_qs(parsed_result.query)
                 if self.querystring_prefix:
-                    query_params_dict = dict(map(lambda (key, value): ("%s%s" % (self.querystring_prefix, str(key)), value), query_params_dict.items()))
+                    query_params_dict = dict([("%s%s" % (self.querystring_prefix, str(key_value[0])), key_value[1]) for key_value in list(query_params_dict.items())])
                 if self.querystring_target_field:
                     event[self.querystring_target_field] = query_params_dict
                 else:
@@ -81,5 +81,5 @@ class UrlParser(BaseThreadedModule):
 
     def encodeEvent(self, event):
         if self.source_field in event:
-            urllib.quote(event[self.source_field]).encode('utf8')
+            urllib.parse.quote(event[self.source_field]).encode('utf8')
         yield event

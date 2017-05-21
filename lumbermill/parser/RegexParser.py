@@ -59,17 +59,17 @@ class RegexParser(BaseThreadedModule):
         self.logstash_patterns = {}
         self.readLogstashPatterns()
         for regex_config in configuration['field_extraction_patterns']:
-            event_type = regex_config.keys()[0]
+            event_type = list(regex_config.keys())[0]
             regex_pattern = regex_config[event_type]
             regex_options = 0
             regex_match_type = 'search'
             if isinstance(regex_pattern, list):
                 i = iter(regex_pattern)
                 # Pattern is the first entry
-                regex_pattern = i.next()
+                regex_pattern = next(i)
                 # Regex options the second
                 try:
-                    regex_options = eval(i.next())
+                    regex_options = eval(next(i))
                 except:
                     etype, evalue, etb = sys.exc_info()
                     self.logger.error("RegEx error for options %s. Exception: %s, Error: %s." % (regex_options, etype, evalue))
@@ -77,7 +77,7 @@ class RegexParser(BaseThreadedModule):
                     return
                 # Regex match type the third (optional)
                 try:
-                    regex_match_type = i.next()
+                    regex_match_type = next(i)
                 except StopIteration:
                     pass
             # Make sure regex_match_type is valid
@@ -151,7 +151,7 @@ class RegexParser(BaseThreadedModule):
         if self.source_field not in event:
             yield event
             return
-        if not isinstance(event[self.source_field], basestring):
+        if not isinstance(event[self.source_field], str):
             self.logger.warning("Data in event[%s] not of type string. Skipping." % self.source_field)
             yield event
             return
@@ -166,7 +166,7 @@ class RegexParser(BaseThreadedModule):
                     matches_dict = matches.groupdict()
             elif regex_data['match_type'] == 'findall':
                 for match in regex_data['pattern'].finditer(string_to_match):
-                    for key, value in match.groupdict().items():
+                    for key, value in list(match.groupdict().items()):
                         try:
                             matches_dict[key].append(value)
                         except:

@@ -88,7 +88,7 @@ class NetFlowParser(BaseThreadedModule):
     def decodeVersion5(self, raw_nf_data, record_count):
         nf_data = {}
         (nf_data['sys_uptime'], nf_data['unix_secs'], nf_data['unix_nsecs'], nf_data['flow_sequence'], nf_data['engine_type'], nf_data['engine_id'], nf_data['sampling_interval']) = struct.unpack('!IIIIBBH', raw_nf_data[4:24])
-        for i in xrange(0, record_count):
+        for i in range(0, record_count):
             record_starts_at = NetFlowParser.NF_V5_HEADER_LENGTH + (i * NetFlowParser.NF_V5_RECORD_LENGTH)
             record = raw_nf_data[record_starts_at:record_starts_at+NetFlowParser.NF_V5_RECORD_LENGTH]
             # Decode record, except src and dest addresses.

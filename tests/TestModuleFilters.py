@@ -1,4 +1,4 @@
-import ModuleBaseTestCase
+from . import ModuleBaseTestCase
 import mock
 
 import lumbermill.utils.DictUtils as DictUtils
@@ -24,7 +24,7 @@ class TestModuleFilters(ModuleBaseTestCase.ModuleBaseTestCase):
                  'remote_ip': '192.168.2.20',
                  'url': 'GET /wiki/Monty_Python/?spanish=inquisition HTTP/1.0',
                  'fields': ['nobody', 'expects', 'the'],
-                 'params':  { u'spanish': [u'inquisition']},
+                 'params':  { 'spanish': ['inquisition']},
                  'user': '-'}
         self.event = DictUtils.getDefaultEventDict(event)
         super(TestModuleFilters, self).setUp(Math.Math(mock.Mock()))

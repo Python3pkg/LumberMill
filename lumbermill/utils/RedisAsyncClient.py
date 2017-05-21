@@ -266,7 +266,7 @@ class RedisError(Exception):
 
 def test():
     def handle_request(result):
-        print 'Redis reply: %r' % result
+        print('Redis reply: %r' % result)
     redis_client = AsyncRedisClient(('localhost', 6379))
     redis_client.fetch(('subscribe', 'GamboPutty'), handle_request)
     #redis_client.fetch(('set', 'foo', 'bar'), handle_request)

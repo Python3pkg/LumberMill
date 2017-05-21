@@ -37,12 +37,12 @@ class Controller:
         for i in range(process_count):
             agent = Agent(self.count_ref)
             agent.start()
-        print 'started %d threads' % (i + 1)
+        print('started %d threads' % (i + 1))
         while self.count_ref.value > 0:
             line = 'connects/sec: %s' % self.count_ref.value
             reset(self.count_ref)
-            print chr(0x08) * len(line)
-            print line
+            print(chr(0x08) * len(line))
+            print(line)
             time.sleep(1)
 
 class Agent(Process):
@@ -58,7 +58,7 @@ class Agent(Process):
 
     def run(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        for counter in xrange(0, 1000):
+        for counter in range(0, 1000):
             try:
                 rand = "%f-%04.3f" % (time.time(), random.random())
                 message ='192.168.2.20 - - [28/Jul/2006:10:27:10 -0300] "GET /cgi-bin/try/%s HTTP/1.0" 200 3395' % rand
@@ -68,7 +68,7 @@ class Agent(Process):
                 time.sleep(.01) #.0000001
             except:
                 etype, evalue, etb = sys.exc_info()
-                print 'Exception: %s, Error: %s.' % (etype, evalue)
+                print('Exception: %s, Error: %s.' % (etype, evalue))
 
 if __name__ == '__main__':
     controller = Controller()

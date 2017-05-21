@@ -79,7 +79,7 @@ class TestXPathParser(ModuleBaseTestCase):
         self.checkConfiguration()
         event = DictUtils.getDefaultEventDict({'agora_product_xml': self.xml_string,
                                                'category': 'COOKING'})
-        self.test_object.handleEvent(event).next()
+        next(self.test_object.handleEvent(event))
         for event in self.test_object.handleEvent(event):
             self.assertEquals(event['xpath_result'], ['Everyday Italian'])
             self.assertTrue(event['lumbermill']['cache_hit'])

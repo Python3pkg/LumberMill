@@ -33,8 +33,8 @@ import logging
 import threading
 
 from lumbermill.constants import LOGLEVEL_STRING_TO_LOGLEVEL_INT
-from utils import IS_GZIPPED_FILE, REOPEN_FILES
-from utils import ENCODINGS
+from .utils import IS_GZIPPED_FILE, REOPEN_FILES
+from .utils import ENCODINGS
 
 
 class Tail(threading.Thread):
@@ -118,7 +118,7 @@ class Tail(threading.Thread):
                     _file = io.open(self._filename, 'r', encoding=self._encoding, errors='replace')
                 else:
                     _file = io.open(self._filename, 'r', errors='replace')
-        except IOError, e:
+        except IOError as e:
             self._log_warning(str(e))
             _file = None
             self.close()
@@ -232,7 +232,7 @@ class Tail(threading.Thread):
 
         try:
             st = os.stat(self._filename)
-        except EnvironmentError, err:
+        except EnvironmentError as err:
             if err.errno == errno.ENOENT:
                 self._log_debug('file removed')
                 self.close()
@@ -265,7 +265,7 @@ class Tail(threading.Thread):
         while True:
             try:
                 data = self._file.read(4096)
-            except IOError, e:
+            except IOError as e:
                 if e.errno == errno.ESTALE:
                     self.active = False
                     return False
@@ -495,7 +495,7 @@ class Tail(threading.Thread):
             self.active = True
             try:
                 st = os.stat(self._filename)
-            except EnvironmentError, err:
+            except EnvironmentError as err:
                 if err.errno == errno.ENOENT:
                     self._log_debug('file removed')
                     self.close()
@@ -526,7 +526,7 @@ class Tail(threading.Thread):
                     return self.tail_read(f, window, position=position)
 
                 return False
-            except IOError, err:
+            except IOError as err:
                 if err.errno == errno.ENOENT:
                     return []
                 raise

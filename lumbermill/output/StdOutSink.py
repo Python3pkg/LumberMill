@@ -43,6 +43,6 @@ class StdOutSink(BaseThreadedModule):
         if self.pretty_print and not self.format:
             pprint.pprint(output, indent=4)
         else:
-            print("%s" % output)
+            print(("%s" % output))
         self.printing = False
         yield None

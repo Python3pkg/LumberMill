@@ -4,7 +4,7 @@ import sys
 import time
 import types
 import requests
-from elasticsearch import Elasticsearch, connection
+from .elasticsearch import Elasticsearch, connection
 from ctypes import c_char_p
 from multiprocessing import Manager, Lock
 
@@ -198,9 +198,9 @@ class ElasticSearch(BaseThreadedModule):
                 # No special fields were selected.
                 # Merge _source field and all other elasticsearch fields to one level.
                 doc.update(doc.pop('_source'))
-                if isinstance(self.field_mappings, types.ListType):
+                if isinstance(self.field_mappings, list):
                     doc = self.extractFieldsFromResultDocument(self.field_mappings, doc)
-                elif isinstance(self.field_mappings, types.DictType):
+                elif isinstance(self.field_mappings, dict):
                     doc = self.extractFieldsFromResultDocumentWithMapping(self.field_mappings, doc)
                 event = DictUtils.getDefaultEventDict(dict=doc, caller_class_name=self.__class__.__name__)
                 self.sendEvent(event)
@@ -257,7 +257,7 @@ class ElasticSearch(BaseThreadedModule):
     def extractFieldsFromResultDocumentWithMapping(self, field_mapping, document):
         document = DictUtils.KeyDotNotationDict(document)
         new_document = DictUtils.KeyDotNotationDict()
-        for source_field, target_field in field_mapping.iteritems():
+        for source_field, target_field in field_mapping.items():
             if source_field not in document:
                 continue
             new_document[target_field] = document[source_field]

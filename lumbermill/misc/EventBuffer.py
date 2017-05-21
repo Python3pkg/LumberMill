@@ -86,7 +86,7 @@ class EventBuffer(BaseThreadedModule):
                 etype, evalue, etb = sys.exc_info()
                 self.logger.error("Could not store event in persistance backend. Exception: %s, Error: %s." % (etype, evalue))
                 pass
-            print "Added to backend"
+            print("Added to backend")
         DictUtils.KeyDotNotationDict.___init___ = DictUtils.KeyDotNotationDict.__init__
         DictUtils.KeyDotNotationDict.__init__ = addToPersistenceBackendOnInit
 
@@ -118,7 +118,7 @@ class EventBuffer(BaseThreadedModule):
 
     def requeueEvents(self):
         input_modules = {}
-        for module_name, module_info in self.lumbermill.modules.items():
+        for module_name, module_info in list(self.lumbermill.modules.items()):
             instance = module_info['instances'][0]
             if instance.module_type == "input":
                 input_modules[instance.__class__.__name__] = instance

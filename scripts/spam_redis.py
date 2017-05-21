@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
+
 import sys
 import time
 import threading
-import Queue
+import queue
 import redis
 
 def usage():
@@ -45,7 +45,7 @@ class Worker(threading.Thread):
                     self.client.publish(redis_name, message)
                 else:
                     self.client.rpush(redis_name, message)
-            except Queue.Empty:
+            except queue.Empty:
                 break
 
 class RedisLoadTester():
@@ -53,13 +53,13 @@ class RedisLoadTester():
     def __init__(self, num_workers=10):
         self.lock = threading.Lock()
         self.counter = 0
-        self.queue = Queue.Queue(10)
+        self.queue = queue.Queue(10)
         self.num_workers = num_workers
 
     def start(self, message):
         total_item_count = count
         workers = set()
-        for i in xrange(0, self.num_workers):
+        for i in range(0, self.num_workers):
             worker = Worker(self.queue)
             worker.start()
             workers.add(worker)
@@ -68,7 +68,7 @@ class RedisLoadTester():
                 sys.exit()
         print("Start load test.")
         start = time.time()
-        for counter in xrange(0, total_item_count):
+        for counter in range(0, total_item_count):
             if counter % 1000 == 0:
                 sys.stdout.write("Message already sent: %s. Mean req/s: %s\r" % (counter+1, counter / (time.time()-start)))
                 sys.stdout.flush()
